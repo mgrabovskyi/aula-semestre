@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import worker,{validateAttempt,handleApi,authenticate} from './worker.mjs';
+import worker,{validateAttempt,handleApi,authenticate,resultOwner} from './worker.mjs';
 const a={id:'attempt-123',topic:'vowels',mode:'practice',correct:8,total:10,percent:80,date:Date.now()};
 const req=(body,origin='https://aula.example')=>new Request('https://aula.example/api/results',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(body)});
 function db(){const rows=new Map();return {rows,prepare(sql){return{bind(...args){return{async all(){return{results:[...rows.values()].filter(r=>r.owner===args[0]&&r.id>args[1]).sort((a,b)=>a.id.localeCompare(b.id)).slice(0,501).map(({owner,...r})=>r)}},sql,args}}}},async batch(statements){for(const {args}of statements){const[owner,id,topic,mode,correct,total,percent,date]=args;const key=owner+id;if(!rows.has(key))rows.set(key,{owner,id,topic,mode,correct,total,percent,date})}}}}
@@ -8,3 +8,5 @@ test('validates scores and legacy records',()=>{assert.ok(validateAttempt(a));as
 test('unauthenticated and cross-origin requests cannot write',async()=>{assert.equal((await handleApi(req({attempts:[a]}),{},null)).status,401);assert.equal((await handleApi(req({attempts:[a]},'https://attacker.example'),{},'user')).status,403);assert.equal(await authenticate(new Request('https://aula.example'),{}),null)});
 test('retries are idempotent and histories are isolated by user',async()=>{const DB=db(),env={DB};for(let i=0;i<2;i++)assert.equal((await handleApi(req({attempts:[a]}),env,'alice')).status,200);assert.equal(DB.rows.size,1);const get=new Request('https://aula.example/api/results');assert.equal((await(await handleApi(get,env,'alice')).json()).attempts.length,1);assert.equal((await(await handleApi(get,env,'bob')).json()).attempts.length,0);assert.equal((await handleApi(req({attempts:[{...a,percent:1}]}),env,'alice')).status,400)});
 test('API fails closed before Access is configured',async()=>{assert.equal((await worker.fetch(new Request('https://aula.example/api/results'),{})).status,401)});
+
+test('approved accounts share family results; other emails are rejected',()=>{const env={FAMILY_EMAILS:'parent@example.com,child@example.com'};assert.equal(resultOwner({email:'PARENT@example.com',sub:'p'},env),'aula-family');assert.equal(resultOwner({email:'child@example.com',sub:'c'},env),'aula-family');assert.equal(resultOwner({email:'other@example.com',sub:'x'},env),null);assert.equal(resultOwner({email:'parent@example.com',sub:'p'},{}),null)});

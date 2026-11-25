@@ -8,6 +8,11 @@ export function validateAttempt(a) {
   if (a.correct == null && a.total == null) return true; // Original records only stored percentages.
   return Number.isInteger(a.total) && a.total > 0 && a.total <= 100 && Number.isInteger(a.correct) && a.correct >= 0 && a.correct <= a.total && a.percent === Math.round(a.correct/a.total*100);
 }
+export function resultOwner(payload, env) {
+  if (typeof payload.email !== 'string' || typeof payload.sub !== 'string') return null;
+  const allowed = (env.FAMILY_EMAILS || '').split(',').map(x=>x.trim().toLowerCase()).filter(Boolean);
+  return allowed.includes(payload.email.toLowerCase()) ? 'aula-family' : null;
+}
 export async function authenticate(request, env) {
   if (!env.ACCESS_TEAM_DOMAIN || !env.ACCESS_AUD) return null;
   const token = request.headers.get('Cf-Access-Jwt-Assertion');
@@ -17,7 +22,7 @@ export async function authenticate(request, env) {
   if (keyUrl !== url) { keyUrl=url; keySource=createRemoteJWKSet(new URL(url)); }
   try {
     const { payload } = await jwtVerify(token,keySource,{issuer,audience:env.ACCESS_AUD,algorithms:['RS256'],requiredClaims:['exp','sub','email']});
-    return typeof payload.email==='string' && typeof payload.sub==='string' ? payload.sub : null;
+    return resultOwner(payload,env);
   } catch { return null; }
 }
 export async function handleApi(request, env, owner) {

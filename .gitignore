@@ -3,3 +3,5 @@ node_modules/
 .dev.vars
 .env*
 cloudflare/public/
+cloudflare/inline-worker.mjs
+cloudflare/bundle.mjs

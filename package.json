@@ -1,0 +1,13 @@
+{
+  "name": "aula-semestre",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node cloudflare/build-assets.mjs",
+    "test": "node --test cloudflare/*.test.mjs",
+    "deploy": "npm run build && wrangler deploy",
+    "db:migrate": "wrangler d1 migrations apply aula-results --remote"
+  },
+  "dependencies": { "jose": "^6.1.3" },
+  "devDependencies": { "wrangler": "4.168.0" }
+}

@@ -16,5 +16,11 @@
   "vars": {
     "ACCESS_TEAM_DOMAIN": "plain-smoke-d2c9.cloudflareaccess.com",
     "ACCESS_AUD": "d95ab45423a3e1000d3d72315f2540c56a396f6aa3e5dfc63a4496f78e56d9ef"
-  }
+  },
+  "routes": [
+    {
+      "pattern": "aula.grabmyapps.com",
+      "custom_domain": true
+    }
+  ]
 }

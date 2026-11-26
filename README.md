@@ -36,3 +36,7 @@ To migrate existing GitHub Pages results, export history on the original URL/bro
 `data.js` contains questions, `app.js` the exercise flow, `sync.js` synchronization/export/import, and `style.css` presentation.
 
 When Wrangler SDK startup is unavailable, build assets, bundle `cloudflare/inline-worker.mjs` with esbuild into `cloudflare/bundle.mjs`, and use `cloudflare/deploy-api.mjs`. Supply the approved family emails through JSON on stdin; never commit their values. The fallback uses the existing Wrangler OAuth grant and Cloudflare’s official Worker upload API. Static files are embedded in the small Worker bundle.
+
+## Production address
+
+https://aula.grabmyapps.com — the same Access-protected Worker and dedicated database as the workers.dev address. Worker-level Access protection covers both hostnames.

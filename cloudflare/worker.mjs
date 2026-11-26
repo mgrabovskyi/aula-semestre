@@ -1,6 +1,6 @@
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 let keySource, keyUrl;
-const topics = new Set(['vowels', 'syllables', 'accents', 'pronouns', 'mixed']);
+const topics = new Set(['vowels', 'syllables', 'accents', 'pronouns', 'mixed', 'determiners','nominal','adjectives','sentences','verbs','adverbs','links','vocabulary','communication','reading','diacritics','math-numbers','math-products','math-distributive','math-operations','val-accents','val-vowels','val-digraphs','val-verbs','math-mixed','valenciano-mixed']);
 const json = (body, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } });
 export function validateAttempt(a) {
   if (!a || typeof a.id !== 'string' || !/^[a-zA-Z0-9_-]{8,100}$/.test(a.id) || !topics.has(a.topic) || !['practice','retry'].includes(a.mode)) return false;

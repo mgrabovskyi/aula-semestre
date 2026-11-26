@@ -3,17 +3,17 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {readFile} from 'node:fs/promises';
 const source=await readFile(new URL('../app.js',import.meta.url),'utf8');
-const data=await readFile(new URL('../data.js',import.meta.url),'utf8');
-function setup(hash='#/'){
+const data=(await readFile(new URL('../data.js',import.meta.url),'utf8'))+'\n'+(await readFile(new URL('../castellano-content.js',import.meta.url),'utf8'))+'\n'+(await readFile(new URL('../subjects-content.js',import.meta.url),'utf8'));
+function setup(hash='#/',cloud=false,pathname='/app/'){
  const elements=new Map();const storage=new Map();
- const element=()=>({innerHTML:'',textContent:'',disabled:true,classList:{toggle(){},add(){},remove(){}},querySelectorAll:()=>[]});
- const document={title:'',querySelector(s){if(!elements.has(s))elements.set(s,element());return elements.get(s)},querySelectorAll:()=>[]};
- const location={hash};const context=vm.createContext({document,location,window:{history:{pushState(a,b,h){location.hash=h}},scrollTo(){},addEventListener(){}},localStorage:{getItem:()=>null,setItem(){}},sessionStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},crypto,Intl,Date,console,confirm:()=>true,fetch:async()=>Response.json({email:'test@example.com'}),navigator:{clipboard:{writeText:async()=>{}}},setTimeout});
+ const element=()=>({innerHTML:'',textContent:'',disabled:true,classList:{toggle(){},add(){},remove(){}},replaceChildren(){},querySelector(){return null},querySelectorAll:()=>[]});
+ const document={title:'',querySelector(s){if(!elements.has(s))elements.set(s,element());return elements.get(s)},querySelectorAll:()=>[],addEventListener(){}};
+ const location={hash,pathname};const navigate=h=>{if(h.startsWith('#'))location.hash=h;else{location.pathname=h;location.hash=''}};const context=vm.createContext({document,location,window:{AULA_CLOUD:cloud,history:{pushState(a,b,h){navigate(h)},replaceState(a,b,h){navigate(h)}},scrollTo(){},addEventListener(){}},localStorage:{getItem:()=>null,setItem(){}},sessionStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},crypto,Intl,Date,console,confirm:()=>true,fetch:async()=>Response.json({email:'test@example.com'}),navigator:{clipboard:{writeText:async()=>{}}},setTimeout});
  vm.runInContext(data+'\n'+source,context);return {context,document,location,run:s=>vm.runInContext(s,context)};
 }
 test('direct links open each subject and exercise, unknown URLs show a recovery link',()=>{
  const c=setup('#/castellano/pronombres-personales');assert.equal(c.run('session.topic'),'pronouns');assert.equal(c.run('session.questions.length'),10);
- for(const [path,view]of [['/','home'],['/castellano','castellano'],['/history','history'],['/english','subject'],['/mathematics','subject'],['/valenciano','subject'],['/logout','logout'],['/unknown','not-found']]){c.location.hash='#'+path;c.run('route()');assert.equal(c.run('appView'),view)}
+ for(const [path,view]of [['/','home'],['/castellano','library'],['/history','history'],['/english','subject'],['/mathematics','library'],['/valenciano','library'],['/logout','logout'],['/unknown','not-found']]){c.location.hash='#'+path;c.run('route()');assert.equal(c.run('appView'),view)}
 });
 test('returning to an exercise restores question order and checked feedback with enabled next button',()=>{
  const c=setup('#/castellano/silabas');const ids=c.run('session.questions.map(q=>q.id).join()');c.run('session.selected=session.questions[0].answer;check()');
@@ -23,5 +23,11 @@ test('results have a stable shareable URL and reopening does not duplicate an at
  const c=setup('#/castellano/tildes');c.run('session.answers=session.questions.map(question=>({question,selected:question.answer,correct:true}));finish()');const url=c.location.hash;assert.match(url,/^#\/results\//);assert.equal(c.run('history.length'),1);c.run('route()');assert.equal(c.run('appView'),'results');assert.equal(c.run('history.length'),1);assert.equal(c.location.hash,url);
 });
 test('profile fetch displays signed-in identity and logout uses Cloudflare logout endpoint',async()=>{
- const c=setup();await c.run('showProfile()');assert.equal(c.document.querySelector('#profile-email').textContent,'test@example.com');c.run('showLogout()');assert.match(c.document.querySelector('#app').innerHTML,/href="\/cdn-cgi\/access\/logout"/);
+ const c=setup();await c.run('showProfile()');assert.equal(c.document.querySelector('#profile-email').textContent,'test@example.com');c.run('showLogout()');assert.match(c.document.querySelector('#app').innerHTML,/href="\/cdn-cgi\/access\/logout\?returnTo=https%3A%2F%2Faula.grabmyapps.com%2F"/);
 });
+
+test('cloud URLs are clean, legacy hashes migrate and Back routing restores a subject',()=>{
+ const c=setup('',true,'/app/mathematics');assert.equal(c.run('appView'),'library');assert.equal(c.location.pathname,'/app/mathematics');assert.equal(c.location.hash,'');c.run('home()');assert.match(c.document.querySelector('#app').innerHTML,/href="\/app\/castellano"/);c.location.pathname='/app/english';c.run('route()');assert.equal(c.document.title,'English · Aula');const legacy=setup('#/mathematics',true);assert.equal(legacy.location.pathname,'/app/mathematics');assert.equal(legacy.location.hash,'');
+});
+test('all new topics open directly and mixed review covers every topic without duplicate questions',()=>{const c=setup('',true);for(const topic of c.run('extraTopics')){c.location.pathname='/app/castellano/'+topic.slug;c.run('route()');assert.equal(c.run('session.topic'),topic.id);assert.equal(c.run('session.questions.length'),10)}c.run("start('mixed')");assert.equal(c.run('session.questions.length'),20);assert.equal(c.run('new Set(session.questions.map(q=>q.id)).size'),20);assert.equal(c.run('new Set(session.questions.map(q=>q.topic)).size'),15)});
+test('math and Valencian exercise routes and reviews stay within their own subject',()=>{const c=setup('',true);for(const topic of c.run('subjectTopicCatalog')){c.location.pathname='/app/'+topic.subject+'/'+topic.slug;c.run('route()');assert.equal(c.run('session.topic'),topic.id);assert.equal(c.run('session.questions.length'),10)}for(const [review,prefix,subject]of [['math-mixed','math-','mathematics'],['valenciano-mixed','val-','valenciano']]){c.run(`start('${review}')`);assert.equal(c.run('session.questions.length'),20);assert.ok(c.run(`session.questions.every(q=>q.topic.startsWith('${prefix}'))`));assert.equal(c.run('new Set(session.questions.map(q=>q.topic)).size'),4);assert.equal(c.location.pathname,'/app/'+subject+'/repaso')}});

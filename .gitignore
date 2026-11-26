@@ -5,3 +5,4 @@ node_modules/
 cloudflare/public/
 cloudflare/inline-worker.mjs
 cloudflare/bundle.mjs
+cloudflare/landing-bundle.mjs

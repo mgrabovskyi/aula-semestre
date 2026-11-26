@@ -27,7 +27,7 @@ Cloudflare files live in `cloudflare/`; `wrangler.jsonc` binds the dedicated dat
 
 ## Result synchronization
 
-Cloud history is refreshed on startup, focus, reconnection, manual sync, and every 30 seconds while the page is visible. Attempts have stable IDs and inserts are idempotent. The two approved family accounts share one history; other accounts are rejected. Offline results stay in local storage and upload on reconnection. The browser cache assumes a personal device and should be cleared before handing the device to a different person.
+Cloud history is refreshed on startup, focus, reconnection, manual sync, and every 30 seconds while the page is visible. Attempts have stable IDs and inserts are idempotent. The approved family accounts share one history; other accounts are rejected. Offline results stay in local storage and upload on reconnection. The browser cache assumes a personal device and should be cleared before handing the device to a different person.
 
 To migrate existing GitHub Pages results, export history on the original URL/browser and import that JSON file on the Cloudflare app. Imports merge by ID without overwriting existing results. Original records retain percentages; newer attempts also include exact counts.
 
@@ -39,4 +39,12 @@ When Wrangler SDK startup is unavailable, build assets, bundle `cloudflare/inlin
 
 ## Production address
 
-https://aula.grabmyapps.com — the same Access-protected Worker and dedicated database as the workers.dev address. Worker-level Access protection covers both hostnames.
+- Public introduction: https://aula.grabmyapps.com/
+- Signed-in home: https://aula.grabmyapps.com/app/#/
+- Subjects and exercises: `/app/#/castellano`, `/app/#/castellano/diptongos-e-hiatos`, `/app/#/castellano/silabas`, `/app/#/castellano/tildes`, `/app/#/castellano/pronombres-personales`, `/app/#/castellano/repaso`.
+- History, profile and sign-out: `/app/#/history`, `/app/#/profile`, `/app/#/logout`.
+- Results: `/app/#/results/<attempt-id>`. Shared links show the saved summary after family history synchronization. Detailed answers are kept in the original tab session.
+
+The public Worker `aula-welcome` serves only the exact route `aula.grabmyapps.com/`. It has no database binding. Build with `node cloudflare/build-landing.mjs`, then deploy using `node cloudflare/deploy-api.mjs --landing` (empty JSON stdin). Its route configuration is recorded in `cloudflare/landing.wrangler.jsonc`. Root hash links from the older app redirect to `/app/`.
+
+All other paths remain on the Access-protected `aula-semestre` Worker, including `/app/`, `/api/profile`, and `/api/results`. Keep the landing route exact, without a wildcard. The separate root domain `grabmyapps.com` is not used or changed.

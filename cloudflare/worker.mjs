@@ -13,7 +13,7 @@ export function resultOwner(payload, env) {
   const allowed = (env.FAMILY_EMAILS || '').split(',').map(x=>x.trim().toLowerCase()).filter(Boolean);
   return allowed.includes(payload.email.toLowerCase()) ? 'aula-family' : null;
 }
-export async function authenticate(request, env) {
+export async function verifiedIdentity(request, env) {
   if (!env.ACCESS_TEAM_DOMAIN || !env.ACCESS_AUD) return null;
   const token = request.headers.get('Cf-Access-Jwt-Assertion');
   if (!token) return null;
@@ -22,9 +22,10 @@ export async function authenticate(request, env) {
   if (keyUrl !== url) { keyUrl=url; keySource=createRemoteJWKSet(new URL(url)); }
   try {
     const { payload } = await jwtVerify(token,keySource,{issuer,audience:env.ACCESS_AUD,algorithms:['RS256'],requiredClaims:['exp','sub','email']});
-    return resultOwner(payload,env);
+    return resultOwner(payload,env)?payload:null;
   } catch { return null; }
 }
+export async function authenticate(request,env){const identity=await verifiedIdentity(request,env);return identity?resultOwner(identity,env):null}
 export async function handleApi(request, env, owner) {
   if (!owner) return json({error:'sign_in_required'},401);
   if (new URL(request.url).pathname !== '/api/results') return json({error:'not_found'},404);
@@ -47,7 +48,7 @@ export async function handleApi(request, env, owner) {
 export default {
   async fetch(request,env) {
     if (new URL(request.url).pathname.startsWith('/api/')) {
-      try { return await handleApi(request,env,await authenticate(request,env)); }
+      try { if(new URL(request.url).pathname==='/api/profile'){const identity=await verifiedIdentity(request,env);return identity?json({email:identity.email}):json({error:'sign_in_required'},401)}return await handleApi(request,env,await authenticate(request,env)); }
       catch { return json({error:'temporarily_unavailable'},503); }
     }
     return env.ASSETS.fetch(request);

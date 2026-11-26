@@ -35,4 +35,6 @@ Valencian subject questions and explanations are in Valencian. The common naviga
 
 Editorial corrections: the supplied Valencian review sheet contradicts itself about **tx**; the app uses **cot-xe**, following standard syllabic separation. It also does not treat *melons* as requiring an accent: it ends in a consonant cluster (-ns), not in vowel + s. Basic diphthong examples avoid applying Spanish syllabification rules to Valencian. Reference: Acadèmia Valenciana de la Llengua, *Gramàtica valenciana bàsica*, orthographic syllable separation: https://alzira.es/wp-content/uploads/2018/09/4_GVB.pdf .
 
-Current totals: 351 Castellano, 91 Matemáticas, and 102 Valencià questions; 23 individual sets and three subject-specific mixed reviews. No PDFs or source archives are served publicly.
+Current totals: 363 Castellano, 94 Matemáticas, and 107 Valencià questions; 23 individual sets and three subject-specific mixed reviews. No PDFs or source archives are served publicly.
+
+Task diversity adds single-letter spelling, typed integers, typed accented words, syllable separation and click-to-order steps/sentences. Verb blanks explicitly state infinitive and tense; equivalent Valencian simple and periphrastic past forms are accepted. Diacritical-accent blanks identify the base word to avoid penalizing other grammatically possible words. See CONTENT-AUDIT.md for the validation scope.

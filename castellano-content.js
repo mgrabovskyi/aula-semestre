@@ -54,7 +54,7 @@ choiceRows('adjectives','¿En qué grado está el adjetivo?', ['Positivo','Compa
  ['Mi mochila es tan ligera como la tuya.','Comparativo de igualdad','Tan… como expresa igualdad.'],
  ['Esta caja es menos pesada que esa.','Comparativo de inferioridad','Menos… que expresa inferioridad.'],
  ['Una película divertidísima','Superlativo','La terminación -ísima expresa la cualidad en grado muy alto.'],
- ['El agua está muy fría.','Superlativo','Muy intensifica al máximo la cualidad en este análisis escolar.']]);
+ ['El agua está muy fría.','Superlativo','Muy expresa la cualidad en un grado muy alto: superlativo absoluto.']]);
 [
  ['Las casas son…',['blancas','blanco','blanca'],'blancas','Casas es femenino plural: el adjetivo debe ser blancas.'],
  ['Los caminos son…',['estrechos','estrecha','estrechas'],'estrechos','Caminos es masculino plural: concuerda con estrechos.'],

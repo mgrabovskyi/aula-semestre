@@ -22,6 +22,7 @@ numberNames.forEach(([n,name])=>numericQuestion('math-numbers','¿Qué número r
  const positions=[place,place/10,place*10,1,10,100,1000].filter(p=>names[p]);
  const options=[...new Set(positions)].slice(0,4).map(p=>names[p]);
  add('math-numbers','¿Qué posición ocupa la cifra indicada?',`El ${d} en ${formatNumber(n)}`,options,names[place],`El ${d} está en las ${names[place].toLowerCase()}. Por eso representa ${formatNumber(d*place)} unidades: ${d} × ${formatNumber(place)} = ${formatNumber(d*place)}.`);
+ bank[bank.length-1].placeValue={number:n,digit:d,place};
 });
 [
  [3643507,'3.000.000 + 600.000 + 40.000 + 3.000 + 500 + 7','3.000.000 + 600.000 + 4.000 + 3.000 + 500 + 7'],

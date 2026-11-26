@@ -1,6 +1,6 @@
 # Aula · Practica a tu ritmo
 
-5th grade exam practice: 544 questions across Castellano (351 questions / 15 sets), Matemáticas (91 / 4 sets), and Valencià (102 / 4 sets). Every set includes shuffled attempts, feedback, scores, error review, and synchronized history. Each available subject also has a 20-question mixed review. English is reserved for future content.
+5th grade exam practice: 564 questions across Castellano (363 questions / 15 sets), Matemáticas (94 / 4 sets), and Valencià (107 / 4 sets). Every set includes shuffled attempts, feedback, scores, error review, and synchronized history. Each available subject also has a 20-question mixed review. English is reserved for future content.
 
 ## Hosting
 
@@ -48,3 +48,5 @@ When Wrangler SDK startup is unavailable, build assets, bundle `cloudflare/inlin
 The public Worker `aula-welcome` serves only the exact route `aula.grabmyapps.com/`. It has no database binding. Build with `node cloudflare/build-landing.mjs`, then deploy using `node cloudflare/deploy-api.mjs --landing` (empty JSON stdin). Its route configuration is recorded in `cloudflare/landing.wrangler.jsonc`. Older hash links automatically migrate to clean `/app/` URLs. The app Worker serves the SPA document for direct page requests; its base URL keeps styles and scripts resolvable on nested exercise pages.
 
 All other paths remain on the Access-protected `aula-semestre` Worker, including `/app/`, `/api/profile`, and `/api/results`. Keep the landing route exact, without a wildcard. Access also registers `aula.grabmyapps.com/app` as a public hostname destination on the same application; this allows the logout `returnTo` destination to validate. Logout returns to the public homepage. The separate root domain `grabmyapps.com` is not used or changed.
+
+Task formats include multiple choice, typed words/letters, typed integer answers, and click-to-order sequences. Each attempt includes the available formats for its topic. Written answers normalize Unicode, casing, and incidental spacing; accents remain significant. Integer answers permit ungrouped digits or correctly grouped dots/spaces. User-written text is HTML-escaped in feedback and result review. `task-types.js` defines formats and grading.

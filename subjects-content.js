@@ -17,7 +17,12 @@ const numberNames=[
 numberNames.forEach(([n,name])=>numericQuestion('math-numbers','¿Qué número representa este nombre?',name,n,`${name}: ${formatNumber(n)}. Separamos las unidades en grupos de tres cifras: millones, millares y unidades.`,[n+1000,n+100000,n-100]));
 [
  [3643507,6,100000],[6217460,2,100000],[9032053,3,10000],[15870640,5,1000000],[83568005,8,10000000],[692003900,6,100000000],[843720000,4,10000000],[2346170,7,10]
-].forEach(([n,d,place])=>numericQuestion('math-numbers','¿Qué valor tiene la cifra indicada?',`El ${d} en ${formatNumber(n)}`,d*place,`El ${d} ocupa la posición de ${formatNumber(place)} unidades: ${d} × ${formatNumber(place)} = ${formatNumber(d*place)}.`,[d*place*10,d*place/10,d]));
+].forEach(([n,d,place])=>{
+ const names={1:'Unidades',10:'Decenas',100:'Centenas',1000:'Unidades de millar',10000:'Decenas de millar',100000:'Centenas de millar',1000000:'Unidades de millón',10000000:'Decenas de millón',100000000:'Centenas de millón'};
+ const positions=[place,place/10,place*10,1,10,100,1000].filter(p=>names[p]);
+ const options=[...new Set(positions)].slice(0,4).map(p=>names[p]);
+ add('math-numbers','¿Qué posición ocupa la cifra indicada?',`El ${d} en ${formatNumber(n)}`,options,names[place],`El ${d} está en las ${names[place].toLowerCase()}. Por eso representa ${formatNumber(d*place)} unidades: ${d} × ${formatNumber(place)} = ${formatNumber(d*place)}.`);
+});
 [
  [3643507,'3.000.000 + 600.000 + 40.000 + 3.000 + 500 + 7','3.000.000 + 600.000 + 4.000 + 3.000 + 500 + 7'],
  [9032053,'9.000.000 + 30.000 + 2.000 + 50 + 3','9.000.000 + 300.000 + 2.000 + 50 + 3'],

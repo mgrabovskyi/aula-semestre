@@ -35,6 +35,13 @@ Valencian subject questions and explanations are in Valencian. The common naviga
 
 Editorial corrections: the supplied Valencian review sheet contradicts itself about **tx**; the app uses **cot-xe**, following standard syllabic separation. It also does not treat *melons* as requiring an accent: it ends in a consonant cluster (-ns), not in vowel + s. Basic diphthong examples avoid applying Spanish syllabification rules to Valencian. Reference: Acadèmia Valenciana de la Llengua, *Gramàtica valenciana bàsica*, orthographic syllable separation: https://alzira.es/wp-content/uploads/2018/09/4_GVB.pdf .
 
-Current totals: 363 Castellano, 94 Matemáticas, and 107 Valencià questions; 23 individual sets and three subject-specific mixed reviews. No PDFs or source archives are served publicly.
+Current totals: 479 Castellano, 94 Matemáticas, and 107 Valencià questions; 25 individual sets and three subject-specific mixed reviews. No PDFs or source archives are served publicly.
 
 Task diversity adds single-letter spelling, typed integers, typed accented words, syllable separation and click-to-order steps/sentences. Verb blanks explicitly state infinitive and tense; equivalent Valencian simple and periphrastic past forms are accepted. Diacritical-accent blanks identify the base word to avoid penalizing other grammatically possible words. See CONTENT-AUDIT.md for the validation scope.
+
+## Featured additions — 27 November 2026
+
+- `Cuaderno_Entrenamiento_Lengua_5_Primaria.pdf`: 90 adapted tasks in `training-language`, covering paronyms, homophones, synonyms/antonyms, polysemy, vowels/syllables, accents, intention, nouns/adjectives, noun classification, determiners/pronouns and tonic/unstressed pronouns. The PDF’s fourth page is blank. Open dialogue writing is adapted into meaning-in-context questions rather than an unreliable exact-text grade.
+- `REPASO - LAS ORACIONES.pdf`: 26 adapted tasks in `sentence-review`, covering six intention categories, intruders, sentence identification in a visible passage, written labels and ordering. Optativa/desiderativa and imperativa/exhortativa are accepted as equivalents in written tasks. Free sentence creation is adapted into objective identification/construction tasks.
+
+Both source sets are pinned first in Castellano with a Nuevo badge. Their questions append after the existing 564 records, retaining earlier question IDs. PDFs are reference material and are not published with the app. `latest-content.js` owns the additions and featured metadata.

@@ -1,6 +1,6 @@
 # Aula · Practica a tu ritmo
 
-5th grade exam practice: 564 questions across Castellano (363 questions / 15 sets), Matemáticas (94 / 4 sets), and Valencià (107 / 4 sets). Every set includes shuffled attempts, feedback, scores, error review, and synchronized history. Each available subject also has a 20-question mixed review. English is reserved for future content.
+5th grade exam practice: 680 questions across Castellano (479 questions / 17 sets), Matemáticas (94 / 4 sets), and Valencià (107 / 4 sets). Every set includes shuffled attempts, feedback, scores, error review, and synchronized history. Each available subject also has a 20-question mixed review. English is reserved for future content.
 
 ## Hosting
 

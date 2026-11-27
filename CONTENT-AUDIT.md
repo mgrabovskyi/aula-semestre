@@ -36,3 +36,7 @@ Scope: all 564 task records across 23 topic sets, plus the three subject reviews
 Local preview kept test answers out of the family database. Checked mixed choice/number navigation, a correct grouped numeric answer submitted with Enter, restored disabled input and feedback after refresh, sequence removal/reordering, restored sequence after refresh, and correct order grading. Existing history and result IDs remain compatible.
 
 Counts: 363 Castellano, 94 Matemáticas, 107 Valencià. Formats: 448 choice, 64 typed text/letter, 44 typed number, 8 ordering.
+
+## 27 November addition
+
+Reviewed both new worksheets and adapted 116 tasks (90 training, 26 sentence review). All 680 records pass the answer/option/duplicate/topic checks. New worksheet routes, first-position cards, and 10-question attempts are tested. The written type labels accept optativa/desiderativa and imperativa/exhortativa; homophone blanks supply a word bank. Open dialogue and free composition tasks are adapted rather than judged against one exact sentence. Existing question IDs remain stable. Current total: 479 Castellano, 94 Matemáticas, 107 Valencià; 25 topic sets.
